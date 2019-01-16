@@ -6,6 +6,8 @@ INGREDIENTS = {
     ('WATER', _('water')),
 }
 
+MAX_TANK_CAPACITY = 500
+
 REAGENTS = {
 
 }

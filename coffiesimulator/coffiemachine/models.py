@@ -1,7 +1,7 @@
 from django.db import models
 from abc import ABC, abstractmethod
 from django.http import HttpResponseServerError
-from .constants import INGREDIENTS
+from .constants import INGREDIENTS, MAX_TANK_CAPACITY
 from django.utils.translation import ugettext_lazy as _
 
 class Ingredient(models.Model):
@@ -16,6 +16,14 @@ class Ingredient(models.Model):
     amount_left = models.FloatField(
         default=0,
     )
+
+    def pop_ingredient(self, amount):
+        self.amount_left -= amount
+        self.save()
+        return amount
+    
+    def fill_ingredient(self):
+        self.amount_left = MAX_TANK_CAPACITY
 
     class Meta:
         db_table = 'ingredients'
@@ -78,12 +86,7 @@ class Recipe(models.Model):
         help_text=_('user district role'),
     )
     #TODO ADD unique together milk coffie and water
-    
-    # ingredients = models.ForeignKey(
-    #     RecipeIngredientsAmount,
-    #     models.DO_NOTHING,
-    #     related_name='recipe_ingredient',
-
+ 
     class Meta:
         db_table = 'recipes'
         verbose_name = _('recipe')
@@ -93,24 +96,77 @@ class Recipe(models.Model):
         return self.name
 
 
+class Tank(ABC):
+    name = NotImplemented
+    pump_state = False
+    ingredient = NotImplemented
+
+    @abstractmethod
+    def get_ingredients(self):
+        pass
+
+    def _enable_tool(self, tool):
+        self.tool = True
+
+    def _distable_tool(self, tool):
+        self.tool = False
+
+    # def pop_ingredient(self, amount, ingredient):
+    #     self.recipe.ingredient.pop_ingredient(amount)
+    #     return amount
 
 
-# class Vessel(ABC):
-#     def get_amount(self, reagent):
-#         try:
-#             reagent.objects.get('amount')
-#         except models.ObjectDoesNotExist as e:
-#             return HttpResponseServerError(f'Cannot get amount of {reagent} now. Error message: {e}')
-    
+class WaterTank(Tank):
+    def __init__(self, ingredient):
+        self.name = 'Water Tank'
+        self.ingredient_name='WATER'
+        self.water = self.ingredient.objects.get(name=self.ingredient_name)
+        self.heater_state = False
 
-class WaterVessel(object):
-    pass
+    def get_ingredients(self, amount):
+        return self.water.pop_ingredient(amount)
 
+    def fill_ingredient(self):
+        return self.water.fill_ingredient()
 
-class MilkVessel(object):
-    pass
-
-class CoffieVessel(object):
-    pass
+class MilkTank(Tank):
+    name = 'Milk Tank'
 
 
+class CoffeeTank(object):
+    grinder_state = False
+
+    def grind(self):
+        self.grinder_state = True
+
+    def stop_grinding(self):
+        self.grinder_state = False
+
+
+# class TankManager(object):
+#     def __init__(self):
+#         self.milk=MilkTank
+#         self.coffee=CoffeeTank
+#         self.water=WaterTank
+#         self.ingredient=Ingredient
+
+
+class RecipeManager(Recipe):
+
+    def pop_ingredient(self, amount, ingredient_name):
+        self.ingredients.filter(ingredient_name).pop_ingredient(amount)
+        return self
+    def set_recipe(self, pk):
+        self.recipe = recipe.objects.get(pk=pk)
+
+    class Meta:
+        abstract = True
+        managed = False
+
+
+class CoffeeMachine(object):
+    def __init__(self, tank_manager, recipe_manager):
+        self.tanks = tank_manager
+        self.recipes = recipe_manager
+
+        

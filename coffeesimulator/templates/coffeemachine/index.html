@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <title>Django Coffee Machine</title>
+  </head>
+  <body>
+    <div class="page-header">
+            <center><h1><a href="/">Django Coffee Machine</a></h1></center>
+        </div>
+
+        <div class="content container">
+            {% block content %}
+            <div class="row">
+                <ul>
+                    <div class="col-md-20">
+                        {% for recipe in recipes %}
+                        <div class="post">
+                            <li>
+                                <p>Nazwa: <strong>{{ recipe.name }}</strong></p>
+                                <p>Opis: <i>{{ recipe.description|linebreaksbr }}</i></p>
+                                <form action="/{{ recipe.id }}/" method="post">{% csrf_token %}
+                                    <input type="submit" class="btn btn-primary" name = "brew_coffee" value="Zrób kawę">
+                                </form>
+                                <br>
+                            </li>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </ul>
+            </div>
+            {% endblock %}
+        </div>
+  </body>
+</html>

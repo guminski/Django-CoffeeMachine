@@ -1,0 +1,7 @@
+{% extends 'coffeemachine/index.html' %}
+
+
+{% block content %}
+    <p>Nazwa: <strong>{{ recipe.name }}</strong></p>
+    <p>Opis: <i>{{ recipe.description|linebreaksbr }}</i></p>
+{% endblock %}

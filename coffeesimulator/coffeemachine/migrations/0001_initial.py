@@ -43,8 +43,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('required_amount', models.FloatField(help_text='Recipe ingredient required amount')),
-                ('ingredient', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ingredient_amount', to='coffiemachine.Ingredient')),
-                ('recipe', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ingredient_amount', to='coffiemachine.Recipe')),
+                ('ingredient', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ingredient_amount', to='coffeemachine.Ingredient')),
+                ('recipe', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='ingredient_amount', to='coffeemachine.Recipe')),
             ],
             options={
                 'verbose_name': 'recipe ingredient',
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='recipe',
             name='ingredients',
-            field=models.ManyToManyField(help_text='user district role', related_name='recipes', through='coffiemachine.RecipeIngredientsAmount', to='coffiemachine.Ingredient'),
+            field=models.ManyToManyField(help_text='user district role', related_name='recipes', through='coffeemachine.RecipeIngredientsAmount', to='coffeemachine.Ingredient'),
         ),
         migrations.AlterUniqueTogether(
             name='recipeingredientsamount',

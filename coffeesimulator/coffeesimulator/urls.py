@@ -17,9 +17,9 @@ from django.contrib import admin
 from django.urls import path
 from coffeemachine import views
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.recipes_list, name='index'),
     path('<int:recipe_id>/', views.recipe_detail, name='detail'),
+    path('ingredients/', views.ingredients, name='ingredients'),
 ]

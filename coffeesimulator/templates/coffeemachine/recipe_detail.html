@@ -2,6 +2,8 @@
 
 
 {% block content %}
-    <p>Nazwa: <strong>{{ recipe.name }}</strong></p>
-    <p>Opis: <i>{{ recipe.description|linebreaksbr }}</i></p>
+<div class="container">
+    <p>Name: <strong>{{ recipe.name }}</strong></p>
+    <p>Description: <i>{{ recipe.description|linebreaksbr }}</i></p>
+</div>
 {% endblock %}

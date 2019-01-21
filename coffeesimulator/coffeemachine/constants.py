@@ -7,7 +7,3 @@ INGREDIENTS = {
 }
 
 MAX_TANK_CAPACITY = 500
-
-REAGENTS = {
-
-}

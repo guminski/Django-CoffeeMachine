@@ -21,7 +21,7 @@ class Ingredient(models.Model):
 
     def clean(self):
         if self.amount_left < 0 or self.amount_left > MAX_TANK_CAPACITY:
-            raise ValidationError(f'Ingredient amount_left have to be in range 0 - {MAX_TANK_CAPACITY}')
+            raise ValidationError(f'Ingredient amount_left have to be in range 0 - {MAX_TANK_CAPACITY}, not {self.amount_left}')
 
     def pop_ingredient(self, amount):
         self.amount_left -= amount
@@ -118,9 +118,10 @@ class IngredientManager(object):
         cls.fill_ingredient
         return cls
 
+
 class Tank(ABC):
     name = NotImplemented
-    ingredient_name = NotImplemented\
+    ingredient_name = NotImplemented
 
 
 class Fluid(ABC):
@@ -135,6 +136,12 @@ class Fluid(ABC):
 
     def disable_pump(self):
         self._pump_state = False
+
+    def make(self):
+        self.enable_heater()
+        self.enable_pump()
+        self.disable_heater()
+        self.disable_pump()
 
 
 class WaterTank(Tank, Fluid):
@@ -165,29 +172,49 @@ class CoffeeTank(Tank):
     def stop_grinding(self):
         self._grinder_state = False
 
+    def make(self):
+        self.grind()
+        self.stop_grinding()
+
 
 class TankManager(object):
-    def __init__(self, water_tank, milk_tank, coffee_tank):
-        self.milk_tank = milk_tank
-        self.coffee_tank = coffee_tank
-        self.water_tank = water_tank
+    def __init__(self):
+        self.milk = MilkTank()
+        self.coffee = CoffeeTank()
+        self.water = WaterTank()
+
+    def all_list(self):
+        return [self.milk, self.coffee, self.water]
+
+    def get_ingredient_names(self):
+        names = []
+        for e in self.all_list():
+            names.append(e.ingredient_name)
+        return names
+
+    def get_by_name(self, name):
+        for tank in self.all_list():
+            if tank.ingredient_name == name:
+                return tank
 
 
 class CoffeeMachine(object):
-    def __init__(self, ingredient_manager, recipe, tank_manager):
-        self.ingredient_manager = ingredient_manager
+    def __init__(self, recipe):
+        self.ingredient_manager = IngredientManager()
+        self.tank = TankManager()
         self.recipe = recipe
-        self.tank_manager = tank_manager
 
     def get_ingredient_req_amounts(self):
-        req_ingredients = self.recipe.ingredient_amount.iterator()
+        req_ingredients = self.recipe.ingredient_amount.all()
         return req_ingredients
 
     def make_coffee(self):
         req_ingredients = self.get_ingredient_req_amounts()
-        
-        for e in req_ingredients:
 
+        for e in req_ingredients:
+            ingredient = e.ingredient
+            req_tank = self.tank.get_by_name(ingredient.name)
+            req_tank.make()
             self.ingredient_manager.pop_ingredient(e.ingredient, e.required_amount)
 
         return self.recipe.name

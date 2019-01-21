@@ -1,0 +1,18 @@
+{% extends 'coffeemachine/index.html' %}
+{% block content %}
+
+<h3>Fill ingredients:</h3>
+
+{% for ingredient in ingredients %}
+<div class="container">
+    <li>
+        <p><strong>{{ ingredient.name }} amount left: {{ ingredient.amount_left }}</strong></p>
+    </li>
+</div>
+<br>
+{% endfor %}
+
+<form action="/ingredients/" method="post">{% csrf_token %}
+    <input type="submit" class="btn btn-primary" name = "fill" value="Fill ingredients">
+</form>
+{% endblock %}

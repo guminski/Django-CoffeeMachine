@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="page-header">
-            <center><h1><a href="/">Django Coffee Machine</a></h1></center>
+            <center><h1><a href="/">Coffee Machine</a></h1></center>
         </div>
 
         <div class="content container">
@@ -21,12 +21,12 @@
                 <ul>
                     <div class="col-md-20">
                         {% for recipe in recipes %}
-                        <div class="post">
+                        <div class="container">
                             <li>
-                                <p>Nazwa: <strong>{{ recipe.name }}</strong></p>
-                                <p>Opis: <i>{{ recipe.description|linebreaksbr }}</i></p>
+                                <p>Name: <strong>{{ recipe.name }}</strong></p>
+                                <p>Description: <i>{{ recipe.description|linebreaksbr }}</i></p>
                                 <form action="/{{ recipe.id }}/" method="post">{% csrf_token %}
-                                    <input type="submit" class="btn btn-primary" name = "brew_coffee" value="Zrób kawę">
+                                    <input type="submit" class="btn btn-primary" name = "brew_coffee" value="Make your coffee!">
                                 </form>
                                 <br>
                             </li>

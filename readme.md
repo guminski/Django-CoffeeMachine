@@ -1,6 +1,6 @@
 # Django Coffee Machine
 
-Simple OOP coffee maker simulator written in Django
+Simple OOP coffee machine simulation written in Django
 
 ## Installing
 
@@ -28,10 +28,26 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 ./manage.py migrate
 ```
 
+**Create your superuser:**
+./manage.py createsuperuser
+
 **Run app:**
 ```
 ./manage.py runserver
 ```
+
+## Config
+```
+*Add your favourite coffee recipes in django /admin site*
+
+*Add ingredients and their amounts*
+
+*Link ingredients with created recipe*
+```
+
+## Make coffee
+
+**Go to root url and brew your favourite coffee!**
 
 ## Running the tests
 

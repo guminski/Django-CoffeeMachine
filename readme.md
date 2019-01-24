@@ -29,7 +29,9 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
 **Create your superuser:**
+```
 ./manage.py createsuperuser
+```
 
 **Run app:**
 ```
